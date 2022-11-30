@@ -1,0 +1,69 @@
+# 함수
+
+함수는 코드의 집합니다.
+
+```{r}
+vec <- 10:20
+
+min(vec)
+max(vec)
+mean(vec)
+median(vec)
+sum(vec)
+sd(vec)
+summary(vec)
+table(vec)
+range(vec)
+```
+
+```{r}
+gugu <- function(a,b){
+  for(i in a){
+    for(j in b){
+      cat(i,"X",j,"=",i*j,"\n")
+    }
+    cat("-------------------\n")
+  }
+}
+gugu(2:3,1:5)
+```
+
+# 결측치(na) 자료 평균 계산
+
+```{r}
+data <- c(10,20,5,4,40,7,NA,6,3,NA,2,NA)
+```
+
+```{r}
+data
+sum(is.na(data))
+table(is.na(data))
+```
+
+```{r}
+mean(data,na.rm = T)
+```
+
+```{r}
+#1) NA <- 0
+data[is.na(data)]<-0
+mean(data)
+```
+
+```{r}
+mean(ifelse(is.na(data),mean(data,na.rm=T),data))
+```
+
+```{r}
+mean(ifelse(is.na(data),median(data,na.rm=T),data))
+```
+
+```{r}
+mean(ifelse(is.na(data),max(data,na.rm=T),data))
+```
+
+```{r}
+mean(ifelse(is.na(data),min(data,na.rm=T),data))
+```
+
+na가 40%이상이면 분석 불가능이다

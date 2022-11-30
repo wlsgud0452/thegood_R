@@ -1,0 +1,466 @@
+# 데이터 시각화
+
+### 산점도(산포도)
+
+```{r}
+y <- c(1,1,2,2,3,3,4,4,5,5)
+plot(y)
+# y = ax + b
+# y = 종속변수, x는 독립변수 x에 따라 y가 변함 
+```
+
+```{r}
+x <- 1:10
+y <- 1:10
+plot(x,y)
+```
+
+```{r}
+#y=ax+b이기에 밑에처럼 써도 된다
+# y = 종속변수, x는 독립변수
+plot(y~x)
+```
+
+```{r}
+plot(y~x,
+     xlim = c(0,12),
+     ylim = c(0,12)
+     )
+```
+
+```{r}
+seoul <- read.csv("./Data/newSeoul2019.csv")
+head(seoul)
+```
+
+### 서울시 교통사고 데이터로 발생건수와 부상자수의 산포도 구하기
+
+단, 발생건수가 150이하이면 빨간색으로 초과이면 파란색으로 구분하기
+
+```{r}
+par(family = "AppleGothic")
+plot(seoul$발생건수,seoul$부상자수,
+     col = ifelse(seoul$발생건수 >= 150, "blue","red"),
+     xlab="발생건수",
+     ylab = "부상자수",
+     main = "발생건수별 부상자수"
+     )
+
+```
+
+```{r}
+
+```
+
+```{r}
+library(dplyr)
+# max
+arrange(aggregate(발생건수~자치구명,seoul,mean),desc (발생건수))[1,2]
+# min
+arrange(aggregate(발생건수~자치구명,seoul,mean), (발생건수))
+par(family="AppleGothic")
+
+plot(seoul$부상자수~seoul$발생건수,
+    col = 
+    ifelse(
+seoul$자치구명 == arrange(aggregate(발생건수~자치구명,seoul,mean),desc (발생건수))[1,1] | seoul$자치구명 == arrange(aggregate(발생건수~자치구명,seoul,mean), (발생건수))[1,1]
+,"red","blue"),
+    main = "발생건수 별 부상자수"
+)
+cat("한 건수당 대충 ",mean(seoul$부상자수/seoul$발생건수),"요정도")
+```
+
+### 산포도는 데이터의 분포를 본다
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1)
+     )
+```
+
+## 꺽은선 그래프(추세를 설명할 때 사용 plot에 type = "l"추가)
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "l"
+     )
+```
+
+### 점과 꺽은선 그래프(both)
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "b"
+     )
+```
+
+### 점이 빠진 꺽은선 그래프
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "c"
+     )
+```
+
+### 점과 꺽은선 그래프를 중첩한 그래프(overleb)
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "o"
+     )
+```
+
+### 수직선 그래프
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "h"
+     )
+```
+
+### 왼쪽 값을 기준으로한 계단 모양 그래프(출발이 왼쪽)
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "s"
+     )
+```
+
+### 오른쪽 값을 기초로한 계단 모양 그래프(출발이 오른쪽)
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "S"
+     )
+```
+
+## Line Type
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     type = "l",
+     lty = 1 #1~6까지 돈다
+     )
+```
+
+# Plotting Symbol
+
+```{r}
+y <- c(1,3,2,4,8,5,7,6,9)
+plot(y,
+     main = "Simple Time Series",
+     xlim = c(min(y) - 1, max(y) +1),
+     ylim = c(min(y) - 1, max(y) +1),
+     pch = c(y,"")
+     )
+```
+
+y의 값이 0.5보다 크면 red, pch =1, 아니면 color = blue pch=18
+
+```{r}
+x <- runif(100)
+y <- runif(100)
+plot(x,y,
+     main = "Simple Time Series",
+     col = ifelse(y>0.5,"red","blue"),
+     xlim = c(min(y) - 0.1, max(y) +0.1),
+     ylim = c(min(y) - 0.1, max(y) +0.1),
+     pch = ifelse(y>0.5, 1, 18)
+     )
+```
+
+# 선 그래프
+
+```{r}
+abc <- c(260, 300, 250, 280, 310)
+def <- c(180, 200, 210, 190, 170)
+ghi <- c(210, 250, 260, 210, 270)
+```
+
+```{r}
+par(family="AppleGothic")
+plot(abc,
+     type = "o",
+     col = "red",
+     ylim = c(0,400),
+     axes = F,#ㅍ그래프의 프레임 제거
+     ann = F#그래프의 라벨제거
+    
+     )
+axis(1,
+    at=1:5,
+    labels = c("서울","대전","대구","광주","원주"),
+    cex.axis = 0.5
+     )
+axis(2,
+     ylim = c(0:400)
+     )
+title(main = "과일 판매량", col.main = "red")
+title(xlab = "지역",col.lab = "blue")
+title(ylab = "판매량",col.lab = "green")
+#기존 표에 다른 데이터를 얹힌다
+lines(def,
+      type = "o",
+      pch = 22,
+      col = "green",
+      lty = 2
+      )
+lines(ghi,
+      type = "o",
+      pch = 22,
+      col = "blue",
+      lty = 2
+      )
+#범례 , 
+legend(4,100,#좌표를 띄워줄 ㅇ좌표
+       c("야구장","축구장","해변가"),
+       col = c("red","green","blue"),
+       pch = c(21,22,22),
+       lty = c(1,2,2),
+       cex = 0.7
+       )
+```
+
+## 막대그래프
+
+```{r}
+x <- 1:6
+barplot(x,
+        main= 1~6,
+        xlab = "Sales",
+        ylab = "amounts",
+        names = c("A","B","C","D","E","F"),
+        col=c("red",rep("blue",5))
+        )
+```
+
+```{r}
+x <- matrix(1:6,3,2)
+x
+par(family = "AppleGothic")
+rownames(x) = c("A","B","C")
+barplot(x,
+        ylim = c(0,12),
+        beside = T,
+        names = c("Korea","America"),
+        main = "수출량",
+        xlab = "국가",
+        ylab = "빈도수",
+        col = c("red","green","blue"),
+        legend.text = T
+        
+        )#기본이 누적 막대 그래프, 컬럼으로 누적됨
+
+```
+
+```{r}
+barplot(abc,
+        main = "Baseball Sales",
+        xlab = "Seson",
+        ylab = "Sales",
+        names = c("Jan","Feb","Mar","Apr","May"),
+        col = c("red",rep("blue",length(abc-1))),
+        density = c(10,30,50,30,10),
+        border = c("red",rep("blue",length(abc-1)))
+        )
+```
+
+```{r}
+data <- read.csv("./Data/education.csv",header = F)
+tail(data)
+str(data)
+```
+
+v1 : 남,녀
+
+v2 : 점수
+
+v3 : 국,영,수
+
+v4 : 초,중,고,대,원
+
+```{r}
+sum(is.na(data))
+```
+
+```{r}
+table(data$V4)
+```
+
+```{r}
+#필요에 따라 factor를 만들어줘야한다.
+#factor로 정의를 해야 그래프 그리기가 쉽다
+data$V1 <- factor(data$V1,levels = 1:2,labels = c("남","여"))
+data$V3 <- factor(data$V3,levels = 1:3,labels = c("국어","영어","수학"))
+data$V4 <- factor(data$V4,levels = 1:5,labels = c("초","중","고","대","원"))
+str(data)
+```
+
+```{r}
+colnames(data) <- c("성별","점수","과목","학력")
+head(data)
+```
+
+```{r}
+table(data$점수)
+
+```
+
+점수별 빈도수를 막그래프로 표현하세요
+
+```{r}
+
+barplot(table(data$점수))
+```
+
+성별 학력별 빈도수를 표현
+
+```{r}
+table(data$성별)
+table(data$학력)
+table(data$성별,data$학력)
+table(data$학력,data$성별)
+```
+
+```{r}
+#그래프에 테이블을 널으면 쉽다.
+#matrix로 변경할 필요가 없다.
+par(family="AppleGothic")
+barplot(table(data$성별,data$학력),
+        beside = T
+        )
+```
+
+# 년도별 분기별 비교 막대 그래프
+
+```{r}
+chart_data <- c(305,450,320,460,330,480,380,520)
+names(chart_data) <- c("2017 1분기", "2018 1분기",
+                      "2017 2분기", "2018 2분기",
+                      "2017 3분기", "2018 3분기",
+                      "2017 4분기", "2018 4분기"
+                      
+                      )
+```
+
+```{r}
+par(family="AppleGothic")
+barplot(chart_data,
+        main="2017년도 2018년도 분기별 매출 현황 비교",
+        xlim = c(0,600),
+        col = rainbow(length(char_data)),
+        ylab = "년도별 분기현황",
+        xlab = "매출액(단위:만원)",
+        cex.names = 0.3,
+        horiz = T,
+        space = 0.5
+        )
+```
+
+```{r}
+par(family="AppleGothic")
+barplot(chart_data,
+        main="2017년도 2018년도 분기별 매출 현황 비교",
+        xlim = c(0,600),
+        col = rep(c("red","blue"),4),
+        ylab = "년도별 분기현황",
+        xlab = "매출액(단위:만원)",
+        cex.names = 0.3,
+        horiz = T,
+        #space = rep(c(1,0.2),4)
+        space = c(1,0.2,1,0.2,1,0.2,1,0.2)
+        )
+
+```
+
+## 1940년 미국 버지니아주 하위계층 사망 비율
+
+```{r}
+str(VADeaths)
+str(as.data.frame(VADeaths))
+class(VADeaths)
+```
+
+```{r}
+barplot(VADeaths,
+        beside = T,
+        col = rainbow(5),
+        ylim = c(0,100),
+        )
+legend(7,100,
+       rownames(VADeaths),
+       fill = rainbow(5),
+       cex=0.7
+      )
+```
+
+# 파이차트
+
+```{r}
+T_Sales <- c(210,110,400,550,600,130)
+par(family = "AppleGothic")
+week <- c("월","화","수","목","금","토")
+ratio <- T_Sales / sum(T_Sales) *100
+label <- paste(week,"\n",ratio,'%')
+pie(T_Sales,
+    main = "영업 실적 파이 차트",
+    #col = rainbow(length(T_Sales)),
+    labels = label
+    )
+```
+
+# 3D Pie Chart
+
+```{r}
+library(plotrix)
+```
+
+```{r}
+T_Sales <- c(210,110,400,550,600,130)
+par(family = "AppleGothic")
+week <- c("월","화","수","목","금","토")
+ratio <- T_Sales / sum(T_Sales) *100
+label <- paste(week,"\n",ratio,'%')
+pie3D(T_Sales,
+    main = "영업 실적 파이 차트",
+    #col = rainbow(length(T_Sales)),
+    labels = label,
+    labelcex = 0.7,
+    explode = 0.05
+    )
+```

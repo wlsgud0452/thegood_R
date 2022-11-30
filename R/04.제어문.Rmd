@@ -1,0 +1,46 @@
+# 제어문
+
+```{r}
+a <- c(8,10,11)
+if(a %% 2 == 0){
+  cat(a,"는 짝수입니다.\n")
+}else{
+  cat(a,"는 홀수 입니다.")
+}
+```
+
+```{r}
+a <- c(8,10,11)
+ifelse(a %% 2 == 0, paste0(a,":짝수"), paste0(a,":홀수"))
+```
+
+### csv file을 불러서 사용
+
+```{r}
+excel <- read.csv("./Data/excel.csv", header = T)
+head(excel)
+```
+
+```{r}
+tail(excel)
+```
+
+```{r}
+str(excel)
+```
+
+```{r}
+summary(excel)
+```
+
+q1 컬럼에서 Data가 3보다 크거나 같으면 data의 제곱근을 구하고 아니면원래 data 출력
+
+```{r}
+excel$q6 <-ifelse(excel$q1 >= 3, sqrt(excel$q1),excel$q1) 
+excel
+```
+
+```{r}
+score <- c(78,85,95,65,100)
+ifelse(score >=80,paste0(score,"우수"),paste0(score,"노력"))
+```

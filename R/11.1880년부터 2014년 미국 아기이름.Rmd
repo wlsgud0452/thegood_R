@@ -1,0 +1,88 @@
+# 1880년 부터 2014년 까지의 미국의 아기이름을 정리해 놓은 데이터셋
+
+```{r}
+baby <- read.csv("./R/Data/R_Baby_Names_1880-2014.csv")
+head(baby)
+```
+
+```{r}
+tail(baby)
+```
+
+```{r}
+str(baby)
+```
+
+baby의 Year부분 정리
+
+```{r}
+baby$Year <- substring(baby$Year,7,10)
+
+baby$Year <- as.numeric(baby$Year)
+head(baby)
+```
+
+저장하여 File 크기 비교
+
+```{r}
+write.csv(baby,"./R/Data/Baby_Names.csv",row.names = F)
+```
+
+baby에서 여자 아이만 femail이라는 dataset을 만들고 row 수 구하기
+
+```{r}
+
+Femail <- subset(baby,baby$Gender == "F")
+Femail
+nrow(Femail)
+```
+
+여자아이 이름 종류 계산
+
+```{r}
+length(unique(Femail$Name))
+```
+
+### 여자아이 이름중 가장 많이 사용된 이름과 count 수 구하기
+
+```{r}
+ aggregate(Count ~ Name, Femail, sum)
+arrange(aggregate(Count ~ Name, Femail, sum),desc(Count))
+a <- arrange(aggregate(Count ~ Name, Femail, sum),Count)
+subset(a,a$Count==5)
+```
+
+## 1880\~2014년 인구분포 현황
+
+```{r}
+Male <- subset(baby,baby$Gender=='M')
+Male <- aggregate(Count ~ Year, Mail, sum)
+Male
+Female <- aggregate(Count ~ Year, Femail, sum)
+Female
+
+```
+
+```{r}
+par(family = "AppleGothic")
+plot(Male$Year,Male$Count,
+      type = "l",
+      col = "blue",
+     cex.axis = 0.5,
+     ylim = c(0,2500000)
+        )
+lines(Female$Year,Female$Count,
+      type = "l",
+      col = "orange"
+      )
+
+title(main = "1880~2014년 인구분포 현황")
+title()
+legend(1980,1000000,
+  c('Male','Female'),
+  col = c("blue",'orange'),
+  fill = c("blue",'orange')
+  
+)
+
+```

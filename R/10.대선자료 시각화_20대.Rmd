@@ -1,3 +1,9 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
 # 대선자료 시각화
 
 ```{r}
@@ -119,12 +125,22 @@ pie3D(electionYun$윤석열,
 # 윤석열 후보의 서울득표 Top5 만 득표율로 표시하고 나머지 지역은 기타로 합치기
 
 ```{r}
+선생님꺼
+#subset(election,광역시도=='서울특별시')
+election_seooul<-election[election$광역시도=='서울특별시',]
+
+election_seoul_yoon<-arrange(election_seooul,desc(윤석열))[,c(2,6)]
+
+head(election_seoul_yoon)[1:5,]
+```
+
+```{r}
 #광역시도별 윤석열 합계 구하기
 election
 library(dplyr)
 library(stringr)
 library(plotrix)
-
+#밑에거와 같음 election[election$광역시도=='서울특별시',]
 seoul_yun <- subset(election,광역시도 == "서울특별시")[,c(2,6)]
 
 seoul_yun <- arrange(seoul_yun,desc(seoul_yun$윤석열))
@@ -137,11 +153,12 @@ seoul_yun_gita <- aggregate(윤석열 ~ 시군구, seoul_yun_gita,sum)
 
 seoul_yun <- seoul_yun[1:5,]
 
-
 seoul_yun <- rbind(seoul_yun,seoul_yun_gita)
 
 seoul_yun
 ```
+
+\
 
 ```{r}
 par(family = "AppleGothic")
@@ -156,4 +173,96 @@ pie3D(seoul_yun$윤석열,
       explode = 0.1,
       radius = 1
       )
+```
+
+# 대선주자 출생지별 득표율 분석
+
+윤석열 후보 : 성북구
+
+```{r}
+election_sungbuk <-  subset(election, 시군구 == '성북구')
+election_sungbuk
+```
+
+```{r}
+election_sungbuk_ratio
+election_sungbuk_ratio <-
+as.numeric(c(election_sungbuk[,5:7],election_sungbuk[,4] - sum(election_sungbuk[,5:7])))/ election_sungbuk[,4]
+
+```
+
+\
+
+```{r}
+election_sungbuk_label
+election_sungbuk_label <-
+paste(c('이재명','운석열','심상정','기타'),"\n",round(election_sungbuk_ratio * 100,2),'%')
+```
+
+```{r}
+par(family="AppleGothic")
+pie3D(election_sungbuk_ratio,
+      labels=election_sungbuk_label,
+      labelcex = 0.8,
+      explode = 0.1,
+      radius = 1
+      )
+```
+
+# 투표수가 가장 많은 4지역(광역시도) 막대그래프 그리기
+
+```{r}
+#투표수가 가장 많은 4지역
+arrange(election,desc(election$투표수))
+election
+top4 <- arrange(aggregate(cbind(투표수,이재명,윤석열,심상정) ~ 광역시도,election,sum),desc(투표수))[1:4,]
+top4_barplot <- top4[,3:5]
+top4_barplot <- as.matrix(top4_barplot)
+top4_barplot <- as.table(top4_barplot)
+top4_label <- top4$광역시도
+election
+top4
+top4_label
+```
+
+```{r}
+par(family="AppleGothic")
+options(scipen = 100)
+barplot(t(top4_barplot),
+        beside = T,
+        ylim = c(0,5000000),
+        names = c("경기도","서울특별시","부산광역시","경상남도"),
+        col = c("skyblue","red","yellow"),
+        cex.axis = 0.6,
+        legend.text = T
+        )
+```
+
+# 투표수가 높은 시군구의 후보별 득표율
+
+```{r}
+arrange(election,desc(election$투표수))
+election
+
+top4_sigungu <- arrange(election,desc(election$투표수))[1:5,c(1:2,5:7)]
+top4_sigungu
+top4_sigungu_label <- paste(top4_sigungu$광역시도,top4_sigungu$시군구)
+top4_sigungu_label
+top4_sigungu_barplot
+top4_sigungu_barplot <- t(top4_sigungu_barplot)
+```
+
+```{r}
+par(family="AppleGothic")
+options(scipen = 100)
+barplot(top4_sigungu_barplot,
+        ylim = c(0,600000),
+        names = top4_sigungu_label,
+        col = c("skyblue","red","yellow"),
+        cex.axis = 0.5,
+        cex.names = 0.5,
+        legend.text = T,
+        main = "투표수 높은 지역의 후보별 투표수",
+        space = 0.8
+        )
 ```

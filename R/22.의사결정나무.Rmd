@@ -1,0 +1,41 @@
+# 의사경정 나무(Decision Tree)
+
+```{r}
+library(party)
+```
+
+```{r}
+library(caret)
+```
+
+Sampling
+
+```{r}
+set.seed(1234)
+samp2 <- createDataPartition(iris$Species, p = 0.7, list = F)
+#Species의 분류에 70퍼센트를 셈플데이터로 뽑아낸다, list가 아닌 vector로 받는다
+samp2
+```
+
+```{r}
+data.train <- iris[samp2,]
+data.test <- iris[-samp2,]
+```
+
+```{r}
+x <- subset(data.test, select = Species)
+y <- data.test$Species
+```
+
+```{r}
+iris_tree <- ctree(Species ~ ., data = data.train)
+```
+
+```{r}
+pred <- predict(iris_tree,x)
+```
+
+```{r}
+mean(pred==y)
+table(pred,y)
+```

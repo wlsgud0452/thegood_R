@@ -1,0 +1,62 @@
+```{r}
+library(plotrix)
+library(dplyr)
+library(stringr)
+population <-read.csv("./Data/population_1960_2020.csv",header = T)
+population
+```
+
+```{r}
+population
+```
+
+```{r}
+metro <-read.csv("./Data/metro_total_1992_2020.csv",header = T)
+head(metro)
+tail(metro)
+```
+
+받아온 population데이터의 총인구수가 맞는건가?
+
+```{r}
+sum(apply(population[,3:4],1,sum) != population$총인구)
+```
+
+받아온 metro데이터의 총인구수가 맞는건가?
+
+```{r}
+sum(apply(metro[,3:19],1,sum) != metro$전국)
+```
+
+# population
+
+na 확인
+
+```{r}
+sum(is.na(population))
+```
+
+남녀 비율
+
+```{r}
+par(family="AppleGothic")
+options(scipen = 100)
+plot(population$년도,population$남자,
+     main = "남녀 비율",
+     type = "l",
+     col = "blue",
+     cex.axis = 0.4,
+     ylab = "인구수 (단위 : 명)",
+     xlab = "년도",
+     ylim = c(10000000,26000000)
+     )
+lines(population$년도,population$여자,
+  col = "red" 
+)
+legend(2010,17000000,
+  c('남','여'),
+  fill = c("blue",'red')
+  
+)
+
+```

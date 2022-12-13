@@ -1,0 +1,297 @@
+```{r}
+library(plotrix)
+library(dplyr)
+library(stringr)
+
+metro <-read.csv("./Data/metro_total_1992_2020.csv",header = T)
+head(metro)
+tail(metro)
+metro
+```
+
+```{r}
+tail(metro)
+head(metro)
+```
+
+## 수도권과 지방의 인구수 추세
+
+수도권 년도별 합계
+
+```{r}
+sudo <- metro[,c(3,6,11)]
+sudo <- apply(sudo,1,sum)
+sudo <- cbind(1992:2020,sudo)
+sudo <- as.data.frame(sudo)
+colnames(sudo) <- c('년도','수도')
+sudo
+
+```
+
+지방 년도별 합계
+
+```{r}
+gibang <- metro[,c(4:5,7:10,12:19)]
+gibang <- apply(gibang, 1, sum)
+gibang  <- cbind(1992:2020,gibang)
+gibang <- as.data.frame(gibang)
+colnames(gibang) <- c('년도','지방')
+gibang
+```
+
+수도권이 지방을 추월하는 순간
+
+```{r}
+sudo >= gibang
+sudo[28,]
+```
+
+수도권 과 지방의 인구수 차이
+
+```{r}
+
+par(family="AppleGothic")
+options(scipen = 100)
+plot(sudo,
+     main = "수도권과 비수도권의 인구추이",
+     type = "l",
+     col = "blue",
+     ylab = '인구수'
+     )
+lines(gibang,
+      col = "red"
+)
+legend(2013,22000000,
+  c('비수도권','수도권'),
+   col = c("red",'blue'),
+  lty = c(1,1)
+)
+```
+
+수도권 인구수 증가에따른 수도권 디테일
+
+```{r}
+sudo_detail <- metro[,c(3,6,11)]
+sudo_detail$년도 <- 1992:2020
+sudo_detail <- cbind(년도 = 1992:2020,sudo_detail)
+
+sudo_detail 
+```
+
+```{r}
+par(family="AppleGothic")
+options(scipen = 100)
+plot(sudo_detail$서울특별시 ~ sudo_detail$년도,
+     type="l",
+     ylim = c(2000000,15000000),
+     col = 'red',
+     ylab = "인구수",
+     xlab = "년도",
+     main = "수도권 인구증가 추이"
+     )
+lines(sudo_detail$인천광역시~ sudo_detail$년도,
+      col = 'green'
+)
+lines(sudo_detail$경기도 ~sudo_detail$년도,
+      col = 'blue'
+)
+legend(2015,8000000,
+  c('서울','인천','경기'),
+  col = c("red",'green','blue'),
+  lty = c(1,1,1)
+  
+)
+```
+
+경기가 서울을 넘는 시점
+
+```{r}
+sudo_detail
+
+sudo_detail[sudo_detail$서울특별시 <= sudo_detail$경기도,]
+sudo_detail[12,]
+```
+
+## 경기도 인구추이kosis
+
+통계청 데이터 가져와야함 gyeonggido1995-2020.csv가져와야함
+
+```{r}
+gyeonggi <- read.csv("./Data/gyronggido_1995_2005.csv")
+
+
+
+```
+
+합계 데ㄷ이터 삭제
+
+```{r}
+
+gyeonggi <- gyeonggi[,-c(2:3)]
+
+```
+
+경기가 서울을 넘는 시점 1995년부터 2005년까지의 데이터
+
+```{r}
+
+rownames(gyeonggi) <- c(1995:2005)
+gyeonggi <- gyeonggi[,-1]
+test <- as.data.frame(t(gyeonggi))
+test2 <- as.data.frame(t(gyeonggi))
+test
+
+```
+
+```{r}
+for(i in 1:11){
+  test[,i] <- str_replace_all(test[,i],"-","0")
+  test[,i] <- str_replace_all(test[,i],",","")
+  test[,i] <- as.numeric(test[,i])
+}
+```
+
+ㄱ경기도 top5 인구
+
+```{r}
+test
+test <- head(test %>% arrange(desc(test$`2005`)),10)
+test
+test <- as.data.frame(t(test)) 
+test
+년도 <- c(1995:2005)
+test <- cbind(년도,test)
+test
+  row()
+```
+
+\
+
+```{r}
+par(family = "AppleGothic")
+options(scipen = 100)
+plot(test$수원시 ~test $년도,
+     type = "l",
+     col = "red",
+     ylim = c(200000,1100000),
+     ylab = "인구수",
+     xlim = c(1994.5,2005.5),
+     xlab = "년도",
+     main = '1995~2005 경기도 top6 인구추이 '
+     
+)
+lines(test$성남시~test $년도,
+      col = "blue"
+      )
+lines(test$고양시~test $년도,
+      col = 'green'
+      )
+lines(test$부천시~test $년도,
+      col = 'orange'
+      )
+lines(test$용인시~test $년도,
+      col = 'yellow'
+      )
+lines(test$안산시~test $년도,
+      col = 'pink'
+      )
+legend(2003.5,550000,
+  c('수원시','성남시','고양시','부천시','용인시','안산시'),
+  col = c("red",'blue','green','orange','yellow','pink'),
+  lty = c(1,1,1),
+  cex = 0.75
+  
+)
+```
+
+```{r}
+test
+sum(test[11,-1])
+
+
+test2 <- as.data.frame(t(test2)) 
+test2 <- test2[11,-c(1:6)]
+test2 <-sum(as.numeric(test2))
+sum <- cbind(sum(test[11,-1]),test2)
+sum
+colnames(sum) <- c("상위","그외")
+sum
+sum <- round(sum[,]/sum(sum)*100,2)
+
+sum_label <- paste(c('상위','그외'),'\n',sum)
+sum_label
+```
+
+```{r}
+par(family = "AppleGothic")
+options(scipen = 100)
+pie3D(sum,
+      main = "2005년 경기도 상위6개 시 및 그외의 비교",
+      labels = sum_label,
+      labelcex = 0.8,
+      explode = 0.1,
+      radius = 1,
+      )
+```
+
+```{r}
+sudo_barplot <- t(as.matrix(sudo_detail[,-1]))
+```
+
+```{r}
+
+sudo_bar
+par(family="AppleGothic")
+options(scipen = 100)
+barplot(sudo_barplot,
+        names = c(1992:2020),
+        col = c("red","green","blue"),
+        ylim = c(0,40000000),
+        legend = T,
+        cex.names = 0.6,
+        cex.axis = 0.6,
+        main = "수도권 인구 누적",
+        ylab = "인구수",
+        xlab = "년도"
+    
+)
+```
+
+수도권 3곳 수도권이 비수도권 역전한 인구수 비교
+
+```{r}
+sudo_detail_2019 <-sudo_detail[28,]
+sudo_detail_2019 <- sudo_detail_2019[,-1]
+sudo_detail_2019_ratio <-sudo_detail_2019[,1:3]/sum(sudo_detail_2019)
+sudo_detail_2019_ratio <- as.numeric(sudo_detail_2019_ratio)
+sudo_detail_2019_ratio
+```
+
+```{r}
+sudo_detail_2019_label <- paste(c('서울특별시','인천광역시','경기도'),"\n",round(sudo_detail_2019_ratio * 100,2),'%')
+sudo_detail_2019_label
+```
+
+```{r}
+par(family="AppleGothic")
+options(scipen = 100)
+pie3D(sudo_detail_2019_ratio,
+      labels = sudo_detail_2019_label,
+       labelcex = 0.8,
+      explode = 0.1,
+      radius = 1,
+      main = "2019년 수도권 인구비율"
+      )
+```
+
+## 경기도 인구 증가에 따른 수도권 인구증가 어캄?
+
+```{r}
+cor(sudo$수도,sudo_detail$서울특별시)
+cor(sudo$수도,sudo_detail$인천광역시)
+cor(sudo$수도,sudo_detail$경기도)
+```
+
+```{r}
+
+```

@@ -1,7 +1,7 @@
 # 1880년 부터 2014년 까지의 미국의 아기이름을 정리해 놓은 데이터셋
 
 ```{r}
-baby <- read.csv("./R/Data/R_Baby_Names_1880-2014.csv")
+baby <- read.csv("./Data/R_Baby_Names_1880-2014.csv")
 head(baby)
 ```
 
@@ -32,9 +32,9 @@ baby에서 여자 아이만 femail이라는 dataset을 만들고 row 수 구하�
 
 ```{r}
 
-Femail <- subset(baby,baby$Gender == "F")
-Femail
-nrow(Femail)
+Female <- subset(baby,baby$Gender == "F")
+Female
+nrow(Female)
 ```
 
 여자아이 이름 종류 계산
@@ -46,9 +46,9 @@ length(unique(Femail$Name))
 ### 여자아이 이름중 가장 많이 사용된 이름과 count 수 구하기
 
 ```{r}
- aggregate(Count ~ Name, Femail, sum)
-arrange(aggregate(Count ~ Name, Femail, sum),desc(Count))
-a <- arrange(aggregate(Count ~ Name, Femail, sum),Count)
+ aggregate(Count ~ Name, Female, sum)
+arrange(aggregate(Count ~ Name, Female, sum),desc(Count))
+a <- arrange(aggregate(Count ~ Name, Female, sum),Count)
 subset(a,a$Count==5)
 ```
 
@@ -56,9 +56,9 @@ subset(a,a$Count==5)
 
 ```{r}
 Male <- subset(baby,baby$Gender=='M')
-Male <- aggregate(Count ~ Year, Mail, sum)
+Male <- aggregate(Count ~ Year, Male, sum)
 Male
-Female <- aggregate(Count ~ Year, Femail, sum)
+Female <- aggregate(Count ~ Year, Female, sum)
 Female
 
 ```

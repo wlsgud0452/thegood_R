@@ -125,7 +125,7 @@ pie3D(electionYun$윤석열,
 # 윤석열 후보의 서울득표 Top5 만 득표율로 표시하고 나머지 지역은 기타로 합치기
 
 ```{r}
-선생님꺼
+
 #subset(election,광역시도=='서울특별시')
 election_seooul<-election[election$광역시도=='서울특별시',]
 
@@ -200,6 +200,7 @@ paste(c('이재명','운석열','심상정','기타'),"\n",round(election_sungbu
 ```
 
 ```{r}
+
 par(family="AppleGothic")
 pie3D(election_sungbuk_ratio,
       labels=election_sungbuk_label,
@@ -226,6 +227,7 @@ top4_label
 ```
 
 ```{r}
+
 par(family="AppleGothic")
 options(scipen = 100)
 barplot(t(top4_barplot),
@@ -245,11 +247,11 @@ arrange(election,desc(election$투표수))
 election
 
 top4_sigungu <- arrange(election,desc(election$투표수))[1:5,c(1:2,5:7)]
-top4_sigungu
+
 top4_sigungu_label <- paste(top4_sigungu$광역시도,top4_sigungu$시군구)
 top4_sigungu_label
 top4_sigungu_barplot
-top4_sigungu_barplot <- t(top4_sigungu_barplot)
+top4_sigungu_barplot <- t(top4_sigungu[,-c(1:2)])
 ```
 
 ```{r}
